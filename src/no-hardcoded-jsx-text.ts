@@ -24,12 +24,16 @@ export default createRule<Options, MessageIds>({
   create(context) {
     return {
       JSXText(node: TSESTree.JSXText) {
-        const value = node.value.trim();
+        const raw = node.value;
+        const value = raw.trim();
 
-        // Ignore purely whitespace or numeric strings
-        if (!value || /^[\d\s.,-]+$/.test(value)) return;
+        // Ignore empty or only whitespace
+        if (!value) return;
 
-        // Check tag name of parent JSX element
+        // Ignore if string does not contain any alphabet or digit
+        if (!/[a-zA-Z0-9]/.test(value)) return;
+
+        // Skip specific tags like <title>, <style>, etc.
         const parent = node.parent;
         if (
           parent?.type === 'JSXElement' &&
