@@ -1,0 +1,25 @@
+{
+  "name": "eslint-plugin-i18n-rules",
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "type": "commonjs",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint . --ext .ts"
+  },
+  "keywords": [
+    "eslint",
+    "eslintplugin"
+  ],
+  "devDependencies": {
+    "@typescript-eslint/utils": "^5.62.0",
+    "eslint": "^8.0.0",
+    "typescript": "^5.4.0"
+  },
+  "peerDependencies": {
+    "eslint": "^8.0.0"
+  }
+}
