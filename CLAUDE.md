@@ -53,3 +53,7 @@ The `no-hardcoded-jsx-text` rule specifically:
 - Target: ES2019, CommonJS modules
 - Uses `@typescript-eslint/utils` for ESLint rule creation utilities
 - Peer dependency on ESLint ^8.0.0
+
+## Rule Docs
+- no-hardcoded-jsx-text: docs/rules/no-hardcoded-jsx-text.md
+- no-hardcoded-jsx-attributes (opt-in): docs/rules/no-hardcoded-jsx-attributes.md
