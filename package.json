@@ -8,7 +8,8 @@
   ],
   "scripts": {
     "build": "tsc",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "test": "npm run build && node tests/no-hardcoded-jsx-text.test.js"
   },
   "keywords": [
     "eslint",
@@ -17,6 +18,7 @@
   "devDependencies": {
     "@typescript-eslint/utils": "^5.62.0",
     "eslint": "^8.0.0",
+    "@typescript-eslint/parser": "^5.62.0",
     "typescript": "^5.4.0"
   },
   "peerDependencies": {
