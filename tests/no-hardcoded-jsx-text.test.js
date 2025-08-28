@@ -17,7 +17,7 @@ const ruleTester = new ESLintUtils.RuleTester({
 ruleTester.run('no-hardcoded-jsx-text', rule, {
   valid: [
     { code: 'const C = () => <div>{t("home.title")}</div>;' },
-    { code: 'const C = () => <Trans>Clicks: {count}</Trans>;' },
+    { code: 'const C = () => <Trans>{t("stats.clicks")} {count}</Trans>;' },
     { code: 'const C = () => <div>{" "}</div>;' },
     { code: 'const C = () => <style>{".foo{color:red}"}</style>;' },
     { code: 'const C = () => <title>Home</title>;' },
