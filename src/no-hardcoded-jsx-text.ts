@@ -14,6 +14,7 @@ export default createRule<Options, MessageIds>({
     type: 'problem',
     docs: {
       description: 'Disallow hardcoded string literals in JSX — use t() or <Trans>.',
+      recommended: false,
     },
     messages: {
       noHardcoded: "Avoid hardcoded string '{{ text }}' in JSX — use t() or <Trans>.",
