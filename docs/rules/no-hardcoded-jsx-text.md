@@ -28,6 +28,8 @@ const C = () => <style>{'.foo{color:red}'}</style>; // ignored tag
 ```
 
 ## Configuration
+
+### Basic usage
 ```json
 {
   "plugins": ["i18n-rules"],
@@ -35,4 +37,39 @@ const C = () => <style>{'.foo{color:red}'}</style>; // ignored tag
     "i18n-rules/no-hardcoded-jsx-text": "error"
   }
 }
+```
+
+### With options
+```json
+{
+  "plugins": ["i18n-rules"],
+  "rules": {
+    "i18n-rules/no-hardcoded-jsx-text": ["error", {
+      "ignoreLiterals": ["404", "N/A", "SKU-0001"],
+      "caseSensitive": false,
+      "trim": true
+    }]
+  }
+}
+```
+
+### Options
+
+- `ignoreLiterals` (string[], default: `["404", "N/A"]`) - Array of string literals to ignore. These strings will not trigger the rule when found in JSX text.
+- `caseSensitive` (boolean, default: `false`) - Whether to use case-sensitive matching when comparing against `ignoreLiterals`.
+- `trim` (boolean, default: `true`) - Whether to trim whitespace from strings before comparing against `ignoreLiterals`.
+
+### Examples with ignore list
+
+#### Valid (with default options)
+```tsx
+const ErrorPage = () => <div>404</div>;       // ignored by default
+const UserProfile = () => <span>N/A</span>;   // ignored by default
+```
+
+#### Valid (with custom ignore list)
+```tsx
+// With configuration: { "ignoreLiterals": ["SKU-123", "v1.0"] }
+const Product = () => <div>SKU-123</div>;     // ignored
+const Version = () => <span>v1.0</span>;      // ignored
 ```
