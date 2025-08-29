@@ -5,7 +5,11 @@ const createRule = ESLintUtils.RuleCreator(
     `https://github.com/camelohq/eslint-plugin-i18n-rules/blob/main/docs/rules/${name}.md`
 );
 
-type Options = [];
+type Options = [{
+  ignoreLiterals?: string[];
+  caseSensitive?: boolean;
+  trim?: boolean;
+}];
 type MessageIds = 'noHardcodedAttr';
 
 const TARGET_ATTRS = new Set([
@@ -36,10 +40,57 @@ export default createRule<Options, MessageIds>({
       noHardcodedAttr:
         "Avoid hardcoded string '{{ text }}' in JSX attribute '{{ attr }}' — use t().",
     },
-    schema: [],
+    schema: [
+      {
+        type: 'object',
+        properties: {
+          ignoreLiterals: {
+            type: 'array',
+            items: { type: 'string' },
+            default: ['404', 'N/A']
+          },
+          caseSensitive: {
+            type: 'boolean',
+            default: false
+          },
+          trim: {
+            type: 'boolean',
+            default: true
+          }
+        },
+        additionalProperties: false
+      }
+    ],
   },
-  defaultOptions: [],
+  defaultOptions: [{
+    ignoreLiterals: ['404', 'N/A'],
+    caseSensitive: false,
+    trim: true
+  }],
   create(context) {
+    const options = context.options[0] || {};
+    const { ignoreLiterals = ['404', 'N/A'], caseSensitive = false, trim: shouldTrim = true } = options;
+
+    const shouldIgnoreString = (text: string): boolean => {
+      let normalizedText = text;
+      
+      if (shouldTrim) {
+        normalizedText = normalizedText.trim();
+      }
+      
+      return ignoreLiterals.some(ignored => {
+        let normalizedIgnored = ignored;
+        let textToCompare = normalizedText;
+        
+        if (!caseSensitive) {
+          normalizedIgnored = normalizedIgnored.toLowerCase();
+          textToCompare = textToCompare.toLowerCase();
+        }
+        
+        return textToCompare === normalizedIgnored;
+      });
+    };
+
     return {
       JSXAttribute(node: TSESTree.JSXAttribute) {
         // Resolve attribute name
@@ -69,6 +120,8 @@ export default createRule<Options, MessageIds>({
           if (!/[a-zA-Z0-9]/.test(text)) return;
           // Ignore numeric-only strings
           if (/^[0-9]+$/.test(text)) return;
+          // Check if the string should be ignored based on configuration
+          if (shouldIgnoreString(value.value)) return;
           context.report({ node: value, messageId: 'noHardcodedAttr', data: { text, attr: attrName } });
           return;
         }
@@ -82,6 +135,8 @@ export default createRule<Options, MessageIds>({
             if (!/[a-zA-Z0-9]/.test(text)) return;
             // Ignore numeric-only strings
             if (/^[0-9]+$/.test(text)) return;
+            // Check if the string should be ignored based on configuration
+            if (shouldIgnoreString(expr.value)) return;
             context.report({ node: expr, messageId: 'noHardcodedAttr', data: { text, attr: attrName } });
             return;
           }
@@ -92,6 +147,8 @@ export default createRule<Options, MessageIds>({
             if (!/[a-zA-Z0-9]/.test(text)) return;
             // Ignore numeric-only strings
             if (/^[0-9]+$/.test(text)) return;
+            // Check if the string should be ignored based on configuration
+            if (shouldIgnoreString(cooked)) return;
             context.report({ node: expr, messageId: 'noHardcodedAttr', data: { text, attr: attrName } });
             return;
           }
