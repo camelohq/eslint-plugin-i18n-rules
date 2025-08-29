@@ -96,6 +96,9 @@ export default createRule<Options, MessageIds>({
           if (ignoredTags.includes(tagName)) return;
         }
 
+        // Ignore numeric-only strings
+        if (/^[0-9]+$/.test(value)) return;
+
         // Check if the string should be ignored based on configuration
         if (shouldIgnoreString(raw)) return;
 
@@ -122,6 +125,8 @@ export default createRule<Options, MessageIds>({
           const text = expr.value.trim();
           if (!text) return;
           if (!/[a-zA-Z0-9]/.test(text)) return;
+          // Ignore numeric-only strings
+          if (/^[0-9]+$/.test(text)) return;
           if (shouldIgnoreString(expr.value)) return;
           context.report({ node: expr, messageId: 'noHardcoded', data: { text } });
           return;
@@ -133,6 +138,8 @@ export default createRule<Options, MessageIds>({
           const text = cooked.trim();
           if (!text) return;
           if (!/[a-zA-Z0-9]/.test(text)) return;
+          // Ignore numeric-only strings
+          if (/^[0-9]+$/.test(text)) return;
           if (shouldIgnoreString(cooked)) return;
           context.report({ node: expr, messageId: 'noHardcoded', data: { text } });
           return;

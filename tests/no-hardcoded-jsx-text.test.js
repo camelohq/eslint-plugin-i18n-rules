@@ -25,6 +25,10 @@ ruleTester.run('no-hardcoded-jsx-text', rule, {
     { code: 'const C = () => <div>— … • ✓</div>;' },
     // Emoji only -> ignored
     { code: 'const C = () => <div>🙂🙂</div>;' },
+    // Numeric only -> ignored
+    { code: 'const C = () => <div>123</div>;' },
+    { code: 'const C = () => <div>1</div>;' },
+    { code: 'const C = () => <div>999</div>;' },
     // Attribute text is not JSXText -> not reported by this rule
     { code: 'const C = () => <div aria-label="Hello" />;' },
     // Script tag content ignored by rule
@@ -34,6 +38,9 @@ ruleTester.run('no-hardcoded-jsx-text', rule, {
     { code: 'const C = () => <div>{`Hello ${name}`}</div>;' },
     { code: 'const C = () => <title>{"Home"}</title>;' },
     { code: 'const C = () => <div>{"🙂"}</div>;' },
+    // Numeric only in expression containers -> ignored
+    { code: 'const C = () => <div>{"123"}</div>;' },
+    { code: 'const C = () => <div>{`999`}</div>;' },
   ],
   invalid: [
     {
@@ -42,10 +49,6 @@ ruleTester.run('no-hardcoded-jsx-text', rule, {
     },
     {
       code: 'const C = () => <div>  Hello world!  </div>;',
-      errors: [{ messageId: 'noHardcoded' }],
-    },
-    {
-      code: 'const C = () => <div>123</div>;',
       errors: [{ messageId: 'noHardcoded' }],
     },
     {
@@ -63,10 +66,6 @@ ruleTester.run('no-hardcoded-jsx-text', rule, {
     },
     {
       code: 'const C = () => <div>{`Hello`}</div>;',
-      errors: [{ messageId: 'noHardcoded' }],
-    },
-    {
-      code: 'const C = () => <div>{"123"}</div>;',
       errors: [{ messageId: 'noHardcoded' }],
     },
     {

@@ -27,6 +27,11 @@ ruleTester.run('no-hardcoded-jsx-attributes', rule, {
     // punctuation / emoji only
     { code: 'const C = () => <div title="— —" />;' },
     { code: 'const C = () => <div alt={"🙂"} />;' },
+    // numeric only -> ignored
+    { code: 'const C = () => <div aria-label="123" />;' },
+    { code: 'const C = () => <img alt={"999"} />;' },
+    { code: 'const C = () => <input placeholder={`42`} />;' },
+    { code: 'const C = () => <div title="1" />;' },
     // ignored tags
     { code: 'const C = () => <script title="Hello" />;' },
   ],

@@ -67,6 +67,8 @@ export default createRule<Options, MessageIds>({
           const text = value.value.trim();
           if (!text) return;
           if (!/[a-zA-Z0-9]/.test(text)) return;
+          // Ignore numeric-only strings
+          if (/^[0-9]+$/.test(text)) return;
           context.report({ node: value, messageId: 'noHardcodedAttr', data: { text, attr: attrName } });
           return;
         }
@@ -78,6 +80,8 @@ export default createRule<Options, MessageIds>({
             const text = expr.value.trim();
             if (!text) return;
             if (!/[a-zA-Z0-9]/.test(text)) return;
+            // Ignore numeric-only strings
+            if (/^[0-9]+$/.test(text)) return;
             context.report({ node: expr, messageId: 'noHardcodedAttr', data: { text, attr: attrName } });
             return;
           }
@@ -86,6 +90,8 @@ export default createRule<Options, MessageIds>({
             const text = cooked.trim();
             if (!text) return;
             if (!/[a-zA-Z0-9]/.test(text)) return;
+            // Ignore numeric-only strings
+            if (/^[0-9]+$/.test(text)) return;
             context.report({ node: expr, messageId: 'noHardcodedAttr', data: { text, attr: attrName } });
             return;
           }
