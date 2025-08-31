@@ -9,7 +9,7 @@ This plugin provides comprehensive ESLint rules to catch hardcoded strings in JS
 ## Features
 
 - 🚀 **JSX Text Detection**: Catches hardcoded strings in JSX elements and expression containers
-- 🎯 **JSX Attributes Validation**: Detects hardcoded strings in accessibility and user-facing attributes  
+- 🎯 **JSX Attributes Validation**: Detects hardcoded strings in accessibility and user-facing attributes
 - 🧠 **Smart Filtering**: Ignores whitespace, punctuation-only content, and non-user-visible elements
 - ⚙️ **Configurable**: Opt-in rules with granular control
 - 📝 **TypeScript Support**: Full TypeScript compatibility
@@ -42,10 +42,10 @@ Add to your ESLint config:
 
 ```javascript
 module.exports = {
-  plugins: ['i18n-rules'],
+  plugins: ["i18n-rules"],
   rules: {
-    'i18n-rules/no-hardcoded-jsx-text': 'error',
-    'i18n-rules/no-hardcoded-jsx-attributes': 'warn', // Start with warnings
+    "i18n-rules/no-hardcoded-jsx-text": "error",
+    "i18n-rules/no-hardcoded-jsx-attributes": "warn", // Start with warnings
   },
 };
 ```
@@ -60,7 +60,7 @@ Prevents hardcoded strings in JSX text content and expression containers.
 
 ```jsx
 <div>Hello World</div>                    // Direct text
-<span>{"Welcome back"}</span>             // String literal in expression  
+<span>{"Welcome back"}</span>             // String literal in expression
 <p>{`Static message`}</p>                 // Template literal (no expressions)
 <button>Save</button>                     // Button text
 ```
@@ -82,7 +82,7 @@ Detects hardcoded strings in user-visible JSX attributes that should be internat
 
 #### Targeted Attributes
 
-- **Accessibility**: `aria-label`, `aria-description`, `aria-valuetext`, `aria-roledescription`  
+- **Accessibility**: `aria-label`, `aria-description`, `aria-valuetext`, `aria-roledescription`
 - **User-facing**: `title`, `alt`, `placeholder`
 - **Dynamic**: All `aria-*` attributes (auto-detected)
 
@@ -90,7 +90,7 @@ Detects hardcoded strings in user-visible JSX attributes that should be internat
 
 ```jsx
 <button aria-label="Save document" />     // Accessibility label
-<img alt="User profile picture" />        // Image alt text  
+<img alt="User profile picture" />        // Image alt text
 <input placeholder="Enter your name" />   // Form placeholder
 <div title="Click to expand" />           // Tooltip text
 <div aria-description="Helpful info" />   // ARIA description
@@ -103,7 +103,7 @@ Detects hardcoded strings in user-visible JSX attributes that should be internat
 <img alt={t('user.profilePicture')} />              // Internationalized
 <input placeholder={t('forms.enterName')} />        // Proper i18n
 <div aria-labelledby="heading-id" />                // ID reference (allowed)
-<div aria-describedby="description-id" />           // ID reference (allowed)  
+<div aria-describedby="description-id" />           // ID reference (allowed)
 <div title="🎉" />                                  // Emoji only (ignored)
 ```
 
@@ -112,13 +112,15 @@ Detects hardcoded strings in user-visible JSX attributes that should be internat
 The plugin intelligently filters out content that doesn't need internationalization:
 
 ### Ignored Content
+
 - **Whitespace-only**: `<div> </div>`, `<span>{"   "}</span>`
-- **Punctuation/Symbols**: `<div>— • ✓</div>`, `<span>{"..."}</span>`  
+- **Punctuation/Symbols**: `<div>— • ✓</div>`, `<span>{"..."}</span>`
 - **Emojis**: `<div>🎉🚀</div>`, `<button>{"😊"}</button>`
 - **HTML Metadata**: `<title>`, `<style>`, `<script>` content
 - **ID References**: `aria-labelledby`, `aria-describedby` attributes
 
 ### Dynamic Content (Allowed)
+
 - **Template literals with expressions**: `<div>{`Hello ${name}`}</div>`
 - **Function calls**: `<span>{formatDate(date)}</span>`
 - **Variables**: `<p>{userMessage}</p>`
@@ -132,14 +134,12 @@ function UserProfile({ user }) {
   return (
     <div>
       <h1>User Profile</h1>
-      <img 
-        src={user.avatar} 
-        alt="Profile picture" 
+      <img
+        src={user.avatar}
+        alt="Profile picture"
         title="Click to change avatar"
       />
-      <button aria-label="Edit profile">
-        Edit
-      </button>
+      <button aria-label="Edit profile">Edit</button>
       <p>Welcome back, {user.name}!</p>
     </div>
   );
@@ -152,16 +152,14 @@ function UserProfile({ user }) {
 function UserProfile({ user }) {
   return (
     <div>
-      <h1>{t('profile.title')}</h1>
-      <img 
-        src={user.avatar} 
-        alt={t('profile.picture')} 
-        title={t('profile.changeAvatar')}
+      <h1>{t("profile.title")}</h1>
+      <img
+        src={user.avatar}
+        alt={t("profile.picture")}
+        title={t("profile.changeAvatar")}
       />
-      <button aria-label={t('actions.editProfile')}>
-        {t('actions.edit')}
-      </button>
-      <p>{t('welcome.back', { name: user.name })}</p>
+      <button aria-label={t("actions.editProfile")}>{t("actions.edit")}</button>
+      <p>{t("welcome.back", { name: user.name })}</p>
     </div>
   );
 }
