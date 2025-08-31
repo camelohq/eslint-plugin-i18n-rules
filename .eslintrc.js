@@ -1,9 +1,9 @@
 module.exports = {
   root: true,
-  parser: '@typescript-eslint/parser',
+  parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 2020,
-    sourceType: 'module',
+    sourceType: "module",
     ecmaFeatures: {
       jsx: true,
     },
@@ -12,17 +12,11 @@ module.exports = {
     node: true,
     es2020: true,
   },
-  extends: [
-    'eslint:recommended',
-  ],
+  extends: ["eslint:recommended"],
   rules: {
     // Add any specific rules here if needed
-    'no-unused-vars': 'off', // TypeScript handles this
-    'no-undef': 'off', // TypeScript handles this
+    "no-unused-vars": "off", // TypeScript handles this
+    "no-undef": "off", // TypeScript handles this
   },
-  ignorePatterns: [
-    'lib/**',
-    'node_modules/**',
-    'tests/**',
-  ],
+  ignorePatterns: ["lib/**", "node_modules/**", "tests/**"],
 };
