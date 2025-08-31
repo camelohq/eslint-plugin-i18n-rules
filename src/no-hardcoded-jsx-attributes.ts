@@ -1,40 +1,42 @@
-import { TSESTree, ESLintUtils } from '@typescript-eslint/utils';
+import { TSESTree, ESLintUtils } from "@typescript-eslint/utils";
 
 const createRule = ESLintUtils.RuleCreator(
-  name =>
-    `https://github.com/camelohq/eslint-plugin-i18n-rules/blob/main/docs/rules/${name}.md`
+  (name) =>
+    `https://github.com/camelohq/eslint-plugin-i18n-rules/blob/main/docs/rules/${name}.md`,
 );
 
-type Options = [{
-  ignoreLiterals?: string[];
-  caseSensitive?: boolean;
-  trim?: boolean;
-}];
-type MessageIds = 'noHardcodedAttr';
+type Options = [
+  {
+    ignoreLiterals?: string[];
+    caseSensitive?: boolean;
+    trim?: boolean;
+  },
+];
+type MessageIds = "noHardcodedAttr";
 
 const TARGET_ATTRS = new Set([
-  'aria-label',
-  'aria-description',
-  'aria-valuetext',
-  'aria-roledescription',
-  'title',
-  'alt',
-  'placeholder',
+  "aria-label",
+  "aria-description",
+  "aria-valuetext",
+  "aria-roledescription",
+  "title",
+  "alt",
+  "placeholder",
 ]);
 
 const IDREF_ATTRS = new Set([
-  'aria-labelledby',
-  'aria-describedby',
-  'aria-hidden',
+  "aria-labelledby",
+  "aria-describedby",
+  "aria-hidden",
 ]);
 
 export default createRule<Options, MessageIds>({
-  name: 'no-hardcoded-jsx-attributes',
+  name: "no-hardcoded-jsx-attributes",
   meta: {
-    type: 'problem',
+    type: "problem",
     docs: {
       description:
-        'Disallow hardcoded string literals in user-visible JSX attributes — use t() instead.',
+        "Disallow hardcoded string literals in user-visible JSX attributes — use t() instead.",
       recommended: false,
     },
     messages: {
@@ -43,34 +45,40 @@ export default createRule<Options, MessageIds>({
     },
     schema: [
       {
-        type: 'object',
+        type: "object",
         properties: {
           ignoreLiterals: {
-            type: 'array',
-            items: { type: 'string' },
-            default: ['404', 'N/A']
+            type: "array",
+            items: { type: "string" },
+            default: ["404", "N/A"],
           },
           caseSensitive: {
-            type: 'boolean',
-            default: false
+            type: "boolean",
+            default: false,
           },
           trim: {
-            type: 'boolean',
-            default: true
-          }
+            type: "boolean",
+            default: true,
+          },
         },
-        additionalProperties: false
-      }
+        additionalProperties: false,
+      },
     ],
   },
-  defaultOptions: [{
-    ignoreLiterals: ['404', 'N/A'],
-    caseSensitive: false,
-    trim: true
-  }],
+  defaultOptions: [
+    {
+      ignoreLiterals: ["404", "N/A"],
+      caseSensitive: false,
+      trim: true,
+    },
+  ],
   create(context) {
     const options = context.options[0] || {};
-    const { ignoreLiterals = ['404', 'N/A'], caseSensitive = false, trim: shouldTrim = true } = options;
+    const {
+      ignoreLiterals = ["404", "N/A"],
+      caseSensitive = false,
+      trim: shouldTrim = true,
+    } = options;
 
     const shouldIgnoreString = (text: string): boolean => {
       let normalizedText = text;
@@ -79,7 +87,7 @@ export default createRule<Options, MessageIds>({
         normalizedText = normalizedText.trim();
       }
 
-      return ignoreLiterals.some(ignored => {
+      return ignoreLiterals.some((ignored) => {
         let normalizedIgnored = ignored;
         let textToCompare = normalizedText;
 
@@ -95,27 +103,29 @@ export default createRule<Options, MessageIds>({
     return {
       JSXAttribute(node: TSESTree.JSXAttribute) {
         // Resolve attribute name
-        if (node.name.type !== 'JSXIdentifier') return;
+        if (node.name.type !== "JSXIdentifier") return;
         const attrName = node.name.name;
 
         // Only check target attributes; skip ID reference attributes
         if (IDREF_ATTRS.has(attrName)) return;
-        if (!TARGET_ATTRS.has(attrName) && !attrName.startsWith('aria-')) return;
+        if (!TARGET_ATTRS.has(attrName) && !attrName.startsWith("aria-"))
+          return;
 
         // Skip on ignored tags
-        const parentEl = node.parent &&
-          node.parent.type === 'JSXOpeningElement' &&
-          node.parent.name.type === 'JSXIdentifier'
-          ? node.parent.name.name
-          : undefined;
-        const ignoredTags = ['title', 'style', 'script'];
+        const parentEl =
+          node.parent &&
+          node.parent.type === "JSXOpeningElement" &&
+          node.parent.name.type === "JSXIdentifier"
+            ? node.parent.name.name
+            : undefined;
+        const ignoredTags = ["title", "style", "script"];
         if (parentEl && ignoredTags.includes(parentEl)) return;
 
         const value = node.value;
         if (!value) return; // boolean attributes
 
         // title="Hello"
-        if (value.type === 'Literal' && typeof value.value === 'string') {
+        if (value.type === "Literal" && typeof value.value === "string") {
           const text = value.value.trim();
           if (!text) return;
           if (!/[a-zA-Z0-9]/.test(text)) return;
@@ -123,14 +133,18 @@ export default createRule<Options, MessageIds>({
           if (/^[0-9]+$/.test(text)) return;
           // Check if the string should be ignored based on configuration
           if (shouldIgnoreString(value.value)) return;
-          context.report({ node: value, messageId: 'noHardcodedAttr', data: { text, attr: attrName } });
+          context.report({
+            node: value,
+            messageId: "noHardcodedAttr",
+            data: { text, attr: attrName },
+          });
           return;
         }
 
         // title={'Hello'} or title={`Hello`}
-        if (value.type === 'JSXExpressionContainer') {
+        if (value.type === "JSXExpressionContainer") {
           const expr = value.expression;
-          if (expr.type === 'Literal' && typeof expr.value === 'string') {
+          if (expr.type === "Literal" && typeof expr.value === "string") {
             const text = expr.value.trim();
             if (!text) return;
             if (!/[a-zA-Z0-9]/.test(text)) return;
@@ -138,11 +152,20 @@ export default createRule<Options, MessageIds>({
             if (/^[0-9]+$/.test(text)) return;
             // Check if the string should be ignored based on configuration
             if (shouldIgnoreString(expr.value)) return;
-            context.report({ node: expr, messageId: 'noHardcodedAttr', data: { text, attr: attrName } });
+            context.report({
+              node: expr,
+              messageId: "noHardcodedAttr",
+              data: { text, attr: attrName },
+            });
             return;
           }
-          if (expr.type === 'TemplateLiteral' && expr.expressions.length === 0) {
-            const cooked = expr.quasis.map(q => q.value.cooked ?? '').join('');
+          if (
+            expr.type === "TemplateLiteral" &&
+            expr.expressions.length === 0
+          ) {
+            const cooked = expr.quasis
+              .map((q) => q.value.cooked ?? "")
+              .join("");
             const text = cooked.trim();
             if (!text) return;
             if (!/[a-zA-Z0-9]/.test(text)) return;
@@ -150,7 +173,11 @@ export default createRule<Options, MessageIds>({
             if (/^[0-9]+$/.test(text)) return;
             // Check if the string should be ignored based on configuration
             if (shouldIgnoreString(cooked)) return;
-            context.report({ node: expr, messageId: 'noHardcodedAttr', data: { text, attr: attrName } });
+            context.report({
+              node: expr,
+              messageId: "noHardcodedAttr",
+              data: { text, attr: attrName },
+            });
             return;
           }
         }
@@ -158,4 +185,3 @@ export default createRule<Options, MessageIds>({
     };
   },
 });
-

@@ -3,15 +3,19 @@
 Disallow hardcoded, user-visible strings in JSX attributes. Prefer `t()` or equivalent.
 
 ## Why
+
 User-facing attribute text (e.g., `aria-label`, `title`, `alt`) must be localizable and consistent.
 
 ## What it checks
+
 - Attributes: `aria-label`, `aria-description`, `aria-valuetext`, `aria-roledescription`, `title`, `alt`, `placeholder`, and other `aria-*` (excludes idrefs).
 - Static values: `attr="Hello"`, `attr={'Hello'}`, `attr={` + "`Hello`" + `}`.
 - Ignores: `aria-labelledby`, `aria-describedby` (ID refs), tags `title`, `style`, `script`, punctuation/emoji-only strings, and numeric-only strings.
 
 ## Examples
+
 ### Invalid
+
 ```tsx
 <button aria-label="Save" />
 <img alt={"User avatar"} />
@@ -19,6 +23,7 @@ User-facing attribute text (e.g., `aria-label`, `title`, `alt`) must be localiza
 ```
 
 ### Valid
+
 ```tsx
 <button aria-label={t('actions.save')} />
 <div aria-labelledby="heading-id" />
@@ -33,6 +38,7 @@ User-facing attribute text (e.g., `aria-label`, `title`, `alt`) must be localiza
 ## Configuration
 
 ### Basic usage
+
 ```json
 {
   "plugins": ["i18n-rules"],
@@ -43,15 +49,19 @@ User-facing attribute text (e.g., `aria-label`, `title`, `alt`) must be localiza
 ```
 
 ### With options
+
 ```json
 {
   "plugins": ["i18n-rules"],
   "rules": {
-    "i18n-rules/no-hardcoded-jsx-attributes": ["warn", {
-      "ignoreLiterals": ["404", "N/A", "SKU-0001"],
-      "caseSensitive": false,
-      "trim": true
-    }]
+    "i18n-rules/no-hardcoded-jsx-attributes": [
+      "warn",
+      {
+        "ignoreLiterals": ["404", "N/A", "SKU-0001"],
+        "caseSensitive": false,
+        "trim": true
+      }
+    ]
   }
 }
 ```
@@ -67,14 +77,16 @@ User-facing attribute text (e.g., `aria-label`, `title`, `alt`) must be localiza
 ### Examples with ignore list
 
 #### Valid (with default options)
+
 ```tsx
-const ErrorPage = () => <div aria-label="404" />;     // ignored by default
-const UserProfile = () => <img alt="N/A" />;         // ignored by default
+const ErrorPage = () => <div aria-label="404" />; // ignored by default
+const UserProfile = () => <img alt="N/A" />; // ignored by default
 ```
 
 #### Valid (with custom ignore list)
+
 ```tsx
 // With configuration: { "ignoreLiterals": ["SKU-123", "v1.0"] }
-const Product = () => <div title="SKU-123" />;       // ignored
-const Version = () => <span aria-label="v1.0" />;   // ignored
+const Product = () => <div title="SKU-123" />; // ignored
+const Version = () => <span aria-label="v1.0" />; // ignored
 ```

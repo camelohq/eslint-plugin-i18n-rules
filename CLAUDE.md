@@ -9,19 +9,23 @@ This is an ESLint plugin that provides internationalization (i18n) linting rules
 ## Commands
 
 ### Build
+
 ```bash
 npm run build
 # or
 yarn build
 ```
+
 Compiles TypeScript source files from `src/` to `lib/` directory.
 
 ### Lint
+
 ```bash
 npm run lint
-# or 
+# or
 yarn lint
 ```
+
 Runs ESLint on all TypeScript files in the project.
 
 ## Architecture
@@ -36,12 +40,14 @@ The plugin follows ESLint's standard plugin structure:
 ### Rule Implementation Pattern
 
 Rules are implemented using `@typescript-eslint/utils.RuleCreator` and follow this structure:
+
 - Type definitions for options and message IDs
 - Meta configuration with rule type, description, and error messages
 - AST visitor functions that analyze specific node types (e.g., `JSXText`)
 - Conditional logic to ignore certain cases (whitespace, specific HTML tags, etc.)
 
 The `no-hardcoded-jsx-text` rule specifically:
+
 - Targets JSX text nodes
 - Ignores whitespace-only content and non-alphanumeric strings
 - Excludes specific HTML tags like `title`, `style`, `script`
@@ -55,5 +61,11 @@ The `no-hardcoded-jsx-text` rule specifically:
 - Peer dependency on ESLint ^8.0.0
 
 ## Rule Docs
+
 - no-hardcoded-jsx-text: docs/rules/no-hardcoded-jsx-text.md
 - no-hardcoded-jsx-attributes (opt-in): docs/rules/no-hardcoded-jsx-attributes.md
+
+# Workflow
+
+- Be sure to type check when you’re done making a series of code changes
+- Prefer running single tests, and not the whole test suite, for performance
