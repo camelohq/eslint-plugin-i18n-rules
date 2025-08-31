@@ -9,7 +9,9 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint . --ext .ts",
-    "test": "npm run build && node tests/index.js"
+    "test": "npm run build && node tests/index.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "keywords": [
     "eslint",
