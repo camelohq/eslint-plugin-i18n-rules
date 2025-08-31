@@ -25,6 +25,7 @@ const TARGET_ATTRS = new Set([
 const IDREF_ATTRS = new Set([
   'aria-labelledby',
   'aria-describedby',
+  'aria-hidden',
 ]);
 
 export default createRule<Options, MessageIds>({
@@ -73,20 +74,20 @@ export default createRule<Options, MessageIds>({
 
     const shouldIgnoreString = (text: string): boolean => {
       let normalizedText = text;
-      
+
       if (shouldTrim) {
         normalizedText = normalizedText.trim();
       }
-      
+
       return ignoreLiterals.some(ignored => {
         let normalizedIgnored = ignored;
         let textToCompare = normalizedText;
-        
+
         if (!caseSensitive) {
           normalizedIgnored = normalizedIgnored.toLowerCase();
           textToCompare = textToCompare.toLowerCase();
         }
-        
+
         return textToCompare === normalizedIgnored;
       });
     };
