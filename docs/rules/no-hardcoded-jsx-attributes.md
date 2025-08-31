@@ -37,7 +37,7 @@ User-facing attribute text (e.g., `aria-label`, `title`, `alt`) must be localiza
 {
   "plugins": ["i18n-rules"],
   "rules": {
-    "i18n-rules/no-hardcoded-jsx-attributes": "error"
+    "i18n-rules/no-hardcoded-jsx-attributes": "warn"
   }
 }
 ```
@@ -47,7 +47,7 @@ User-facing attribute text (e.g., `aria-label`, `title`, `alt`) must be localiza
 {
   "plugins": ["i18n-rules"],
   "rules": {
-    "i18n-rules/no-hardcoded-jsx-attributes": ["error", {
+    "i18n-rules/no-hardcoded-jsx-attributes": ["warn", {
       "ignoreLiterals": ["404", "N/A", "SKU-0001"],
       "caseSensitive": false,
       "trim": true

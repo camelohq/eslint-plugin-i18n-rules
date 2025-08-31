@@ -33,7 +33,7 @@ Add to your ESLint config:
   "plugins": ["i18n-rules"],
   "rules": {
     "i18n-rules/no-hardcoded-jsx-text": "error",
-    "i18n-rules/no-hardcoded-jsx-attributes": "error"
+    "i18n-rules/no-hardcoded-jsx-attributes": "warn"
   }
 }
 ```
