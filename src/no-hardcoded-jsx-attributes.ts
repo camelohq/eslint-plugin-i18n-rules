@@ -10,6 +10,7 @@ type Options = [
     ignoreLiterals?: string[];
     caseSensitive?: boolean;
     trim?: boolean;
+    ignoreComponentsWithTitle?: string[];
   },
 ];
 type MessageIds = "noHardcodedAttr";
@@ -60,6 +61,11 @@ export default createRule<Options, MessageIds>({
             type: "boolean",
             default: true,
           },
+          ignoreComponentsWithTitle: {
+            type: "array",
+            items: { type: "string" },
+            default: ["Layout", "SEO"],
+          },
         },
         additionalProperties: false,
       },
@@ -70,6 +76,7 @@ export default createRule<Options, MessageIds>({
       ignoreLiterals: ["404", "N/A"],
       caseSensitive: false,
       trim: true,
+      ignoreComponentsWithTitle: ["Layout", "SEO"],
     },
   ],
   create(context) {
@@ -78,6 +85,7 @@ export default createRule<Options, MessageIds>({
       ignoreLiterals = ["404", "N/A"],
       caseSensitive = false,
       trim: shouldTrim = true,
+      ignoreComponentsWithTitle = ["Layout", "SEO"],
     } = options;
 
     const shouldIgnoreString = (text: string): boolean => {
@@ -120,6 +128,14 @@ export default createRule<Options, MessageIds>({
             : undefined;
         const ignoredTags = ["title", "style", "script"];
         if (parentEl && ignoredTags.includes(parentEl)) return;
+
+        // Skip title attributes on ignored components
+        if (
+          attrName === "title" &&
+          parentEl &&
+          ignoreComponentsWithTitle.includes(parentEl)
+        )
+          return;
 
         const value = node.value;
         if (!value) return; // boolean attributes

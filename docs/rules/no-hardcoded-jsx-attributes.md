@@ -59,7 +59,8 @@ User-facing attribute text (e.g., `aria-label`, `title`, `alt`) must be localiza
       {
         "ignoreLiterals": ["404", "N/A", "SKU-0001"],
         "caseSensitive": false,
-        "trim": true
+        "trim": true,
+        "ignoreComponentsWithTitle": ["Layout", "SEO"]
       }
     ]
   }
@@ -71,6 +72,7 @@ User-facing attribute text (e.g., `aria-label`, `title`, `alt`) must be localiza
 - `ignoreLiterals` (string[], default: `["404", "N/A"]`) - Array of string literals to ignore. These strings will not trigger the rule when found in JSX attributes.
 - `caseSensitive` (boolean, default: `false`) - Whether to use case-sensitive matching when comparing against `ignoreLiterals`.
 - `trim` (boolean, default: `true`) - Whether to trim whitespace from strings before comparing against `ignoreLiterals`.
+- `ignoreComponentsWithTitle` (string[], default: `["Layout", "SEO"]`) - Array of component names where hardcoded `title` props are allowed. Only applies to the `title` attribute specifically.
 
 **Note:** Numeric-only strings (e.g., `"1"`, `"123"`, `"999"`) are automatically ignored regardless of configuration options.
 
@@ -89,4 +91,36 @@ const UserProfile = () => <img alt="N/A" />; // ignored by default
 // With configuration: { "ignoreLiterals": ["SKU-123", "v1.0"] }
 const Product = () => <div title="SKU-123" />; // ignored
 const Version = () => <span aria-label="v1.0" />; // ignored
+```
+
+### Examples with component title exceptions
+
+#### Valid (with default ignoreComponentsWithTitle)
+
+```tsx
+// Layout and SEO components allow hardcoded title props by default
+const HomePage = () => <Layout title="Welcome to Our Site" />;
+const BlogPost = () => <SEO title={"Post Title"} />;
+const Dashboard = () => <Layout title={`User Dashboard`} />;
+```
+
+#### Invalid (other components still trigger the rule)
+
+```tsx
+// Other components with title props still trigger the rule
+const Tooltip = () => <Button title="Click me" />; // ❌ triggers rule
+const Card = () => <div title="Card description" />; // ❌ triggers rule
+
+// Non-title attributes on ignored components also trigger the rule
+const Page = () => <Layout aria-label="Main navigation" />; // ❌ triggers rule
+const Meta = () => <SEO alt="Logo" />; // ❌ triggers rule
+```
+
+#### Custom component configuration
+
+```tsx
+// With configuration: { "ignoreComponentsWithTitle": ["PageWrapper", "Container"] }
+const CustomPage = () => <PageWrapper title="Custom Page" />; // ✅ allowed
+const Section = () => <Container title="Section Title" />; // ✅ allowed
+const Other = () => <Layout title="Page" />; // ❌ triggers rule (Layout not in custom list)
 ```

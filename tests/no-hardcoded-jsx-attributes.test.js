@@ -131,4 +131,49 @@ ruleTester.run("no-hardcoded-jsx-attributes trim option", rule, {
   ],
 });
 
+// Test ignoreComponentsWithTitle option
+ruleTester.run("no-hardcoded-jsx-attributes ignoreComponentsWithTitle", rule, {
+  valid: [
+    // Default ignored components (Layout, SEO) with title props
+    { code: 'const C = () => <Layout title="Page Title" />;' },
+    { code: 'const C = () => <SEO title={"Page Title"} />;' },
+    { code: "const C = () => <Layout title={`Page Title`} />;" },
+    // Custom ignored components
+    {
+      code: 'const C = () => <PageWrapper title="Page Title" />;',
+      options: [{ ignoreComponentsWithTitle: ["PageWrapper", "Container"] }],
+    },
+    {
+      code: 'const C = () => <Container title={"Title"} />;',
+      options: [{ ignoreComponentsWithTitle: ["PageWrapper", "Container"] }],
+    },
+  ],
+  invalid: [
+    // Other components with title should still be reported
+    {
+      code: 'const C = () => <Button title="Click Me" />;',
+      errors: [{ messageId: "noHardcodedAttr" }],
+    },
+    {
+      code: 'const C = () => <div title={"Tooltip text"} />;',
+      errors: [{ messageId: "noHardcodedAttr" }],
+    },
+    // Non-title attributes on ignored components should still be reported
+    {
+      code: 'const C = () => <Layout aria-label="Navigation" />;',
+      errors: [{ messageId: "noHardcodedAttr" }],
+    },
+    {
+      code: 'const C = () => <SEO alt={"Description"} />;',
+      errors: [{ messageId: "noHardcodedAttr" }],
+    },
+    // Components not in ignore list should be reported even with title
+    {
+      code: 'const C = () => <Button title="Click Me" />;',
+      options: [{ ignoreComponentsWithTitle: ["Layout"] }],
+      errors: [{ messageId: "noHardcodedAttr" }],
+    },
+  ],
+});
+
 console.log("Attribute rule tests executed successfully.");
