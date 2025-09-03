@@ -130,7 +130,12 @@ export default createRule<Options, MessageIds>({
         if (parentEl && ignoredTags.includes(parentEl)) return;
 
         // Skip title attributes on ignored components
-        if (attrName === "title" && parentEl && ignoreComponentsWithTitle.includes(parentEl)) return;
+        if (
+          attrName === "title" &&
+          parentEl &&
+          ignoreComponentsWithTitle.includes(parentEl)
+        )
+          return;
 
         const value = node.value;
         if (!value) return; // boolean attributes
