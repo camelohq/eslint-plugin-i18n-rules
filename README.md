@@ -105,7 +105,32 @@ Detects hardcoded strings in user-visible JSX attributes that should be internat
 <div aria-labelledby="heading-id" />                // ID reference (allowed)
 <div aria-describedby="description-id" />           // ID reference (allowed)
 <div title="🎉" />                                  // Emoji only (ignored)
+<Layout title="Page Title" />                       // Wrapper component (ignored by default)
+<SEO title="Welcome | My App" />                    // SEO component (ignored by default)
 ```
+
+#### Configuration Options
+
+```json
+{
+  "rules": {
+    "i18n-rules/no-hardcoded-jsx-attributes": [
+      "warn",
+      {
+        "ignoreLiterals": ["404", "N/A", "SKU-0001"],
+        "caseSensitive": false,
+        "trim": true,
+        "ignoreComponentsWithTitle": ["Layout", "SEO"]
+      }
+    ]
+  }
+}
+```
+
+- **`ignoreLiterals`** _(string[], default: `["404", "N/A"]`)_ - Array of string literals to ignore
+- **`caseSensitive`** _(boolean, default: `false`)_ - Case-sensitive matching for ignore literals
+- **`trim`** _(boolean, default: `true`)_ - Trim whitespace before comparing ignore literals
+- **`ignoreComponentsWithTitle`** _(string[], default: `["Layout", "SEO"]`)_ - Components where hardcoded `title` props are allowed
 
 ## Smart Detection
 
@@ -132,16 +157,19 @@ The plugin intelligently filters out content that doesn't need internationalizat
 ```jsx
 function UserProfile({ user }) {
   return (
-    <div>
+    <Layout title="User Dashboard">
+      {" "}
+      {/* Layout title allowed by default */}
       <h1>User Profile</h1>
       <img
         src={user.avatar}
-        alt="Profile picture"
-        title="Click to change avatar"
+        alt="Profile picture" // ❌ Hardcoded alt text
+        title="Click to change avatar" // ❌ Hardcoded tooltip
       />
-      <button aria-label="Edit profile">Edit</button>
-      <p>Welcome back, {user.name}!</p>
-    </div>
+      <button aria-label="Edit profile">Edit</button>{" "}
+      {/* ❌ Hardcoded aria-label */}
+      <p>Welcome back, {user.name}!</p> {/* ❌ Hardcoded text */}
+    </Layout>
   );
 }
 ```
@@ -151,7 +179,9 @@ function UserProfile({ user }) {
 ```jsx
 function UserProfile({ user }) {
   return (
-    <div>
+    <Layout title="User Dashboard">
+      {" "}
+      {/* ✅ Layout title still allowed */}
       <h1>{t("profile.title")}</h1>
       <img
         src={user.avatar}
@@ -160,7 +190,7 @@ function UserProfile({ user }) {
       />
       <button aria-label={t("actions.editProfile")}>{t("actions.edit")}</button>
       <p>{t("welcome.back", { name: user.name })}</p>
-    </div>
+    </Layout>
   );
 }
 ```
