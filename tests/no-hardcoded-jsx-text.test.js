@@ -43,6 +43,18 @@ ruleTester.run("no-hardcoded-jsx-text", rule, {
     // Numeric only in expression containers -> ignored
     { code: 'const C = () => <div>{"123"}</div>;' },
     { code: "const C = () => <div>{`999`}</div>;" },
+    // Trans component content should be ignored
+    {
+      code: 'const C = () => <Trans i18nKey="key">Hardcoded text inside Trans</Trans>;',
+    },
+    {
+      code: "const C = () => <Trans>Your request to join <span>company</span> has been approved</Trans>;",
+    },
+    {
+      code: 'const C = () => <Trans i18nKey="nested"><div>Nested content <span>should be ignored</span></div></Trans>;',
+    },
+    { code: 'const C = () => <Trans>{"Static string in expression"}</Trans>;' },
+    { code: "const C = () => <Trans>{`Template literal content`}</Trans>;" },
   ],
   invalid: [
     {

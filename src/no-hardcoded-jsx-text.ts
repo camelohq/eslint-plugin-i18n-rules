@@ -84,6 +84,21 @@ export default createRule<Options, MessageIds>({
       });
     };
 
+    const isInsideTransComponent = (node: TSESTree.Node): boolean => {
+      let current = node.parent;
+      while (current) {
+        if (
+          current.type === "JSXElement" &&
+          current.openingElement.name.type === "JSXIdentifier" &&
+          current.openingElement.name.name === "Trans"
+        ) {
+          return true;
+        }
+        current = current.parent;
+      }
+      return false;
+    };
+
     return {
       JSXText(node: TSESTree.JSXText) {
         const raw = node.value;
@@ -94,6 +109,9 @@ export default createRule<Options, MessageIds>({
 
         // Ignore if string does not contain any alphabet or digit
         if (!/[a-zA-Z0-9]/.test(value)) return;
+
+        // Skip if inside a Trans component
+        if (isInsideTransComponent(node)) return;
 
         // Skip specific tags like <title>, <style>, etc.
         const parent = node.parent;
@@ -119,6 +137,9 @@ export default createRule<Options, MessageIds>({
         });
       },
       JSXExpressionContainer(node: TSESTree.JSXExpressionContainer) {
+        // Skip if inside a Trans component
+        if (isInsideTransComponent(node)) return;
+
         const parent = node.parent;
         if (
           parent?.type === "JSXElement" &&
