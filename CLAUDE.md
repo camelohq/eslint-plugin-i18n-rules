@@ -68,5 +68,5 @@ The `no-hardcoded-jsx-text` rule specifically:
 # Workflow
 
 - Checkout a new branch before do your task
-- Be sure to type check (run `yarn format`, `yarn test`, `yarn build`) when you’re done making a series of code changes
+- Be sure to type check (run `yarn test`, `yarn build`, `yarn format` ) when you’re done making a series of code changes
 - Prefer running single tests, and not the whole test suite, for performance
