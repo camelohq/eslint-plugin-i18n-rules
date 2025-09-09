@@ -10,7 +10,7 @@ Hardcoded strings block localization and consistency. This rule helps surface th
 
 - JSX text nodes: `<div>Hello</div>`
 - Static strings in expression containers: `<div>{'Hello'}</div>`, `<div>{` + "`Hello`" + `}</div>`
-- Ignores: whitespace-only, non-alphanumeric-only (punctuation/emoji), numeric-only strings, and content inside `title`, `style`, `script` tags.
+- Ignores: whitespace-only, non-alphanumeric-only (punctuation/emoji), numeric-only strings, content inside `title`, `style`, `script` tags, and **content inside `<Trans>` components**.
 
 ## Examples
 
@@ -32,6 +32,9 @@ const C = () => <div>🙂🙂</div>; // emoji only
 const C = () => <div>123</div>; // numeric only
 const C = () => <span>{"999"}</span>; // numeric only
 const C = () => <style>{".foo{color:red}"}</style>; // ignored tag
+// Trans component content is ignored
+const C = () => <Trans i18nKey="welcome">Welcome to our app</Trans>;
+const C = () => <Trans>Your request to join <span>company</span> has been approved</Trans>;
 ```
 
 ## Configuration

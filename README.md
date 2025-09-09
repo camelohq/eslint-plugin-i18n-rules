@@ -74,6 +74,7 @@ Prevents hardcoded strings in JSX text content and expression containers.
 <Trans>Welcome {name}</Trans>             // i18n component
 <div>{" "}</div>                          // Whitespace (ignored)
 <title>Page Title</title>                 // HTML metadata (ignored)
+<Trans i18nKey="welcome">Welcome to our app</Trans>  // Trans content ignored
 ```
 
 ### `no-hardcoded-jsx-attributes` 🆕
@@ -142,6 +143,7 @@ The plugin intelligently filters out content that doesn't need internationalizat
 - **Punctuation/Symbols**: `<div>— • ✓</div>`, `<span>{"..."}</span>`
 - **Emojis**: `<div>🎉🚀</div>`, `<button>{"😊"}</button>`
 - **HTML Metadata**: `<title>`, `<style>`, `<script>` content
+- **Trans Components**: Content inside `<Trans>` components from next-i18next
 - **ID References**: `aria-labelledby`, `aria-describedby` attributes
 
 ### Dynamic Content (Allowed)
