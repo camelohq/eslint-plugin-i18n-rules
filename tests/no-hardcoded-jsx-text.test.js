@@ -16,30 +16,45 @@ const ruleTester = new ESLintUtils.RuleTester({
   },
 });
 
+// =============================================================================
+// Basic functionality tests
+// =============================================================================
+console.log("Running no-hardcoded-jsx-text basic functionality tests...");
+
 ruleTester.run("no-hardcoded-jsx-text", rule, {
   valid: [
+    // Valid i18n usage
     { code: 'const C = () => <div>{t("home.title")}</div>;' },
     { code: 'const C = () => <Trans>{t("stats.clicks")} {count}</Trans>;' },
+
+    // Whitespace only
     { code: 'const C = () => <div>{" "}</div>;' },
+
+    // Special tags (ignored)
     { code: 'const C = () => <style>{".foo{color:red}"}</style>;' },
     { code: "const C = () => <title>Home</title>;" },
+    { code: "const C = () => <script>var a=1;</script>;" },
+
     // Punctuation / symbols only -> ignored (no a-zA-Z0-9)
     { code: "const C = () => <div>— … • ✓</div>;" },
+
     // Emoji only -> ignored
     { code: "const C = () => <div>🙂🙂</div>;" },
+
     // Numeric only -> ignored
     { code: "const C = () => <div>123</div>;" },
     { code: "const C = () => <div>1</div>;" },
     { code: "const C = () => <div>999</div>;" },
+
     // Attribute text is not JSXText -> not reported by this rule
     { code: 'const C = () => <div aria-label="Hello" />;' },
-    // Script tag content ignored by rule
-    { code: "const C = () => <script>var a=1;</script>;" },
+
     // Expression containers: dynamic -> allowed
     { code: 'const C = () => <div>{t("home.title")}</div>;' },
     { code: "const C = () => <div>{`Hello ${name}`}</div>;" },
     { code: 'const C = () => <title>{"Home"}</title>;' },
     { code: 'const C = () => <div>{"🙂"}</div>;' },
+
     // Numeric only in expression containers -> ignored
     { code: 'const C = () => <div>{"123"}</div>;' },
     { code: "const C = () => <div>{`999`}</div>;" },
@@ -61,6 +76,7 @@ ruleTester.run("no-hardcoded-jsx-text", rule, {
       code: "const C = () => <p>Hi — 2024</p>;",
       errors: [{ messageId: "noHardcoded" }],
     },
+
     // Expression containers: static strings -> disallow
     {
       code: 'const C = () => <div>{"Hello"}</div>;',
@@ -77,9 +93,11 @@ ruleTester.run("no-hardcoded-jsx-text", rule, {
   ],
 });
 
-console.log("Rule tests executed.");
+// =============================================================================
+// Option tests: ignoreLiterals
+// =============================================================================
+console.log("Running no-hardcoded-jsx-text ignoreLiterals tests...");
 
-// Test with custom ignore list
 ruleTester.run("no-hardcoded-jsx-text with custom ignore list", rule, {
   valid: [
     {
@@ -100,7 +118,11 @@ ruleTester.run("no-hardcoded-jsx-text with custom ignore list", rule, {
   ],
 });
 
-// Test case sensitivity
+// =============================================================================
+// Option tests: caseSensitive
+// =============================================================================
+console.log("Running no-hardcoded-jsx-text caseSensitive tests...");
+
 ruleTester.run("no-hardcoded-jsx-text case sensitivity", rule, {
   valid: [
     {
@@ -117,7 +139,11 @@ ruleTester.run("no-hardcoded-jsx-text case sensitivity", rule, {
   ],
 });
 
-// Test trim option
+// =============================================================================
+// Option tests: trim
+// =============================================================================
+console.log("Running no-hardcoded-jsx-text trim tests...");
+
 ruleTester.run("no-hardcoded-jsx-text trim option", rule, {
   valid: [
     {
@@ -133,3 +159,5 @@ ruleTester.run("no-hardcoded-jsx-text trim option", rule, {
     },
   ],
 });
+
+console.log("✓ no-hardcoded-jsx-text tests completed successfully.");
