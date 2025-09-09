@@ -78,3 +78,58 @@ ruleTester.run("no-hardcoded-jsx-text", rule, {
 });
 
 console.log("Rule tests executed.");
+
+// Test with custom ignore list
+ruleTester.run("no-hardcoded-jsx-text with custom ignore list", rule, {
+  valid: [
+    {
+      code: "const C = () => <div>SKU-123</div>;",
+      options: [{ ignoreLiterals: ["SKU-123", "v1.0"] }],
+    },
+    {
+      code: 'const C = () => <p>{"v1.0"}</p>;',
+      options: [{ ignoreLiterals: ["SKU-123", "v1.0"] }],
+    },
+  ],
+  invalid: [
+    {
+      code: "const C = () => <div>Hello</div>;",
+      options: [{ ignoreLiterals: ["SKU-123", "v1.0"] }],
+      errors: [{ messageId: "noHardcoded" }],
+    },
+  ],
+});
+
+// Test case sensitivity
+ruleTester.run("no-hardcoded-jsx-text case sensitivity", rule, {
+  valid: [
+    {
+      code: "const C = () => <div>hello</div>;",
+      options: [{ ignoreLiterals: ["HELLO"], caseSensitive: false }],
+    },
+  ],
+  invalid: [
+    {
+      code: "const C = () => <div>hello</div>;",
+      options: [{ ignoreLiterals: ["HELLO"], caseSensitive: true }],
+      errors: [{ messageId: "noHardcoded" }],
+    },
+  ],
+});
+
+// Test trim option
+ruleTester.run("no-hardcoded-jsx-text trim option", rule, {
+  valid: [
+    {
+      code: "const C = () => <div>  hello  </div>;",
+      options: [{ ignoreLiterals: ["hello"], trim: true }],
+    },
+  ],
+  invalid: [
+    {
+      code: "const C = () => <div>  hello  </div>;",
+      options: [{ ignoreLiterals: ["hello"], trim: false }],
+      errors: [{ messageId: "noHardcoded" }],
+    },
+  ],
+});
