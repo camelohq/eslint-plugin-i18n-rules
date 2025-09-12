@@ -8,9 +8,9 @@ User-facing attribute text (e.g., `aria-label`, `title`, `alt`) must be localiza
 
 ## What it checks
 
-- Attributes: `aria-label`, `aria-description`, `aria-valuetext`, `aria-roledescription`, `title`, `alt`, `placeholder`, and other `aria-*` (excludes idrefs).
+- Attributes: `aria-label`, `aria-description`, `aria-valuetext`, `aria-roledescription`, `title`, `alt`, `placeholder`.
 - Static values: `attr="Hello"`, `attr={'Hello'}`, `attr={` + "`Hello`" + `}`.
-- Ignores: `aria-labelledby`, `aria-describedby` (ID refs), tags `title`, `style`, `script`, punctuation/emoji-only strings, and numeric-only strings.
+- Ignores: tags `title`, `style`, `script`, punctuation/emoji-only strings, and numeric-only strings.
 
 ## Examples
 

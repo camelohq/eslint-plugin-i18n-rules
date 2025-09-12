@@ -16,31 +16,44 @@ const ruleTester = new ESLintUtils.RuleTester({
   },
 });
 
+// =============================================================================
+// Basic functionality tests
+// =============================================================================
+console.log("Running no-hardcoded-jsx-attributes basic functionality tests...");
+
 ruleTester.run("no-hardcoded-jsx-attributes", rule, {
   valid: [
-    // dynamic i18n usage
+    // Valid i18n usage
     { code: 'const C = () => <button aria-label={t("actions.save")} />;' },
-    // attributes not targeted
+
+    // Attributes not targeted
     { code: 'const C = () => <a href="/home" />;' },
     { code: 'const C = () => <div id="foo" className="bar" />;' },
-    // aria idrefs allowed
+
+    // ARIA idrefs allowed (no longer checked since PR scope refinement)
     { code: 'const C = () => <div aria-labelledby="heading-id" />;' },
     { code: 'const C = () => <div aria-describedby={"desc-id"} />;' },
-    // punctuation / emoji only
+
+    // Punctuation / emoji only
     { code: 'const C = () => <div title="— —" />;' },
     { code: 'const C = () => <div alt={"🙂"} />;' },
-    // numeric only -> ignored
+
+    // Numeric only -> ignored
     { code: 'const C = () => <div aria-label="123" />;' },
     { code: 'const C = () => <img alt={"999"} />;' },
     { code: "const C = () => <input placeholder={`42`} />;" },
     { code: 'const C = () => <div title="1" />;' },
-    // ignored tags
+
+    // Ignored tags
     { code: 'const C = () => <script title="Hello" />;' },
-    // default ignore list
+
+    // Default ignore list
     { code: 'const C = () => <div aria-label="404" />;' },
     { code: 'const C = () => <img alt="N/A" />;' },
     { code: 'const C = () => <div title={"404"} />;' },
     { code: "const C = () => <span aria-label={`N/A`} />;" },
+
+    // aria-hidden is not in TARGET_ATTRS allowlist anymore
     { code: 'const C = () => <span aria-hidden="true" />;' },
     { code: 'const C = () => <span aria-hidden="false" />;' },
   ],
@@ -76,7 +89,11 @@ ruleTester.run("no-hardcoded-jsx-attributes", rule, {
   ],
 });
 
-// Test with custom ignore list
+// =============================================================================
+// Option tests: ignoreLiterals
+// =============================================================================
+console.log("Running no-hardcoded-jsx-attributes ignoreLiterals tests...");
+
 ruleTester.run("no-hardcoded-jsx-attributes with custom ignore list", rule, {
   valid: [
     {
@@ -97,7 +114,11 @@ ruleTester.run("no-hardcoded-jsx-attributes with custom ignore list", rule, {
   ],
 });
 
-// Test case sensitivity
+// =============================================================================
+// Option tests: caseSensitive
+// =============================================================================
+console.log("Running no-hardcoded-jsx-attributes caseSensitive tests...");
+
 ruleTester.run("no-hardcoded-jsx-attributes case sensitivity", rule, {
   valid: [
     {
@@ -114,7 +135,11 @@ ruleTester.run("no-hardcoded-jsx-attributes case sensitivity", rule, {
   ],
 });
 
-// Test trim option
+// =============================================================================
+// Option tests: trim
+// =============================================================================
+console.log("Running no-hardcoded-jsx-attributes trim tests...");
+
 ruleTester.run("no-hardcoded-jsx-attributes trim option", rule, {
   valid: [
     {
@@ -131,13 +156,20 @@ ruleTester.run("no-hardcoded-jsx-attributes trim option", rule, {
   ],
 });
 
-// Test ignoreComponentsWithTitle option
+// =============================================================================
+// Option tests: ignoreComponentsWithTitle
+// =============================================================================
+console.log(
+  "Running no-hardcoded-jsx-attributes ignoreComponentsWithTitle tests...",
+);
+
 ruleTester.run("no-hardcoded-jsx-attributes ignoreComponentsWithTitle", rule, {
   valid: [
     // Default ignored components (Layout, SEO) with title props
     { code: 'const C = () => <Layout title="Page Title" />;' },
     { code: 'const C = () => <SEO title={"Page Title"} />;' },
     { code: "const C = () => <Layout title={`Page Title`} />;" },
+
     // Custom ignored components
     {
       code: 'const C = () => <PageWrapper title="Page Title" />;',
@@ -158,6 +190,7 @@ ruleTester.run("no-hardcoded-jsx-attributes ignoreComponentsWithTitle", rule, {
       code: 'const C = () => <div title={"Tooltip text"} />;',
       errors: [{ messageId: "noHardcodedAttr" }],
     },
+
     // Non-title attributes on ignored components should still be reported
     {
       code: 'const C = () => <Layout aria-label="Navigation" />;',
@@ -167,6 +200,7 @@ ruleTester.run("no-hardcoded-jsx-attributes ignoreComponentsWithTitle", rule, {
       code: 'const C = () => <SEO alt={"Description"} />;',
       errors: [{ messageId: "noHardcodedAttr" }],
     },
+
     // Components not in ignore list should be reported even with title
     {
       code: 'const C = () => <Button title="Click Me" />;',
@@ -176,4 +210,4 @@ ruleTester.run("no-hardcoded-jsx-attributes ignoreComponentsWithTitle", rule, {
   ],
 });
 
-console.log("Attribute rule tests executed successfully.");
+console.log("✓ no-hardcoded-jsx-attributes tests completed successfully.");

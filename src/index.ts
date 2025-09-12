@@ -8,7 +8,9 @@ export = {
   },
   configs: {
     recommended: {
+      plugins: ["i18n-rules"],
       rules: {
+        "i18n-rules/no-hardcoded-jsx-text": "error",
         "i18n-rules/no-hardcoded-jsx-attributes": [
           "warn",
           {
