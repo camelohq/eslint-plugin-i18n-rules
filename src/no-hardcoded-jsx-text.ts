@@ -2,7 +2,7 @@ import { TSESTree, ESLintUtils } from "@typescript-eslint/utils";
 
 const createRule = ESLintUtils.RuleCreator(
   (name) =>
-    `https://github.com/your-org/eslint-plugin-i18n-rules/blob/main/docs/rules/${name}.md`,
+    `https://github.com/camelohq/eslint-plugin-i18n-rules/blob/main/docs/rules/${name}.md`,
 );
 
 type Options = [
@@ -21,7 +21,7 @@ export default createRule<Options, MessageIds>({
     docs: {
       description:
         "Disallow hardcoded string literals in JSX — use t() or <Trans>.",
-      recommended: false,
+      recommended: "error",
     },
     messages: {
       noHardcoded:

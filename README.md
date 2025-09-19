@@ -38,6 +38,16 @@ Add to your ESLint config:
 }
 ```
 
+### Recommended Config
+
+Use the plugin's recommended setup, which enables `no-hardcoded-jsx-text` as an error and `no-hardcoded-jsx-attributes` as a warning:
+
+```json
+{
+  "extends": ["plugin:i18n-rules/recommended"]
+}
+```
+
 ### JavaScript/TypeScript Config
 
 ```javascript
@@ -85,7 +95,6 @@ Detects hardcoded strings in user-visible JSX attributes that should be internat
 
 - **Accessibility**: `aria-label`, `aria-description`, `aria-valuetext`, `aria-roledescription`
 - **User-facing**: `title`, `alt`, `placeholder`
-- **Dynamic**: All `aria-*` attributes (auto-detected)
 
 #### ❌ Invalid
 

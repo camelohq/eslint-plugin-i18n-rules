@@ -25,12 +25,6 @@ const TARGET_ATTRS = new Set([
   "placeholder",
 ]);
 
-const IDREF_ATTRS = new Set([
-  "aria-labelledby",
-  "aria-describedby",
-  "aria-hidden",
-]);
-
 export default createRule<Options, MessageIds>({
   name: "no-hardcoded-jsx-attributes",
   meta: {
@@ -114,10 +108,8 @@ export default createRule<Options, MessageIds>({
         if (node.name.type !== "JSXIdentifier") return;
         const attrName = node.name.name;
 
-        // Only check target attributes; skip ID reference attributes
-        if (IDREF_ATTRS.has(attrName)) return;
-        if (!TARGET_ATTRS.has(attrName) && !attrName.startsWith("aria-"))
-          return;
+        // Only check a known allowlist of user-visible attributes
+        if (!TARGET_ATTRS.has(attrName)) return;
 
         // Skip on ignored tags
         const parentEl =
