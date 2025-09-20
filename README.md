@@ -16,11 +16,15 @@ This plugin provides comprehensive ESLint rules to catch hardcoded strings in JS
 
 ## Install
 
+Install directly from GitHub using a commit hash:
+
 ```bash
-npm install --save-dev eslint-plugin-i18n-rules
+npm install --save-dev camelohq/eslint-plugin-i18n-rules#commit-hash
 # or
-yarn add --dev eslint-plugin-i18n-rules
+yarn add --dev camelohq/eslint-plugin-i18n-rules#commit-hash
 ```
+
+Replace `commit-hash` with the specific commit you want to use.
 
 ## Usage
 
