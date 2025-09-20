@@ -2,10 +2,9 @@
 const { ESLintUtils } = require("@typescript-eslint/utils");
 const path = require("path");
 
-// Load the built rule from lib/
-const rule = require(
-  path.resolve(__dirname, "../lib/no-hardcoded-jsx-attributes.js"),
-).default;
+// Load the built rule from bundled lib/
+const plugin = require(path.resolve(__dirname, "../lib/index.js"));
+const rule = plugin.rules["no-hardcoded-jsx-attributes"];
 
 const ruleTester = new ESLintUtils.RuleTester({
   parser: require.resolve("@typescript-eslint/parser"),
