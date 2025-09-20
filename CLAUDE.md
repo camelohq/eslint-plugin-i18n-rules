@@ -16,7 +16,17 @@ npm run build
 yarn build
 ```
 
-Compiles TypeScript source files from `src/` to `lib/` directory.
+Bundles TypeScript source files from `src/` to a single optimized `lib/index.js` file using tsup (esbuild-powered bundler).
+
+### Build (Development)
+
+```bash
+npm run build:dev
+# or
+yarn build:dev
+```
+
+Compiles TypeScript source files to separate files using tsc (useful for debugging).
 
 ### Test
 
@@ -56,7 +66,7 @@ The plugin follows ESLint's standard plugin structure:
 - **Rules**: Individual rule implementations in `src/` directory
   - `no-hardcoded-jsx-text.ts` - Main rule for JSX content (recommended)
   - `no-hardcoded-jsx-attributes.ts` - Attribute rule (opt-in)
-- **Build output**: `lib/` directory contains compiled CommonJS modules
+- **Build output**: `lib/` directory contains a single bundled CommonJS module (`index.js` + `index.d.ts`)
 - **Package**: Publishes only the `lib/` directory as specified in `package.json`
 - **Tests**: Custom test runner in `tests/` directory with comprehensive test cases
 - **Documentation**: Rule docs in `docs/rules/` directory
@@ -98,8 +108,9 @@ Rules are implemented using `@typescript-eslint/utils.RuleCreator` and follow th
 - Target: ES2019, CommonJS modules
 - Uses `@typescript-eslint/utils` for ESLint rule creation utilities
 - Peer dependency on ESLint ^8.0.0
-- Development dependencies include TypeScript ~5.0.4, Prettier for formatting
+- Development dependencies include TypeScript ~5.0.4, Prettier for formatting, tsup for bundling
 - Custom test runner instead of traditional test frameworks
+- Bundle optimization: Single 9.7KB bundle (down from 12KB + multiple files)
 - GitHub repository: https://github.com/camelohq/eslint-plugin-i18n-rules
 
 ## Configuration

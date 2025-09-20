@@ -15,7 +15,8 @@
 
 ## Build, Test, and Development Commands
 
-- `npm run build` / `yarn build`: Compile TypeScript to `lib/` using `tsc`.
+- `npm run build` / `yarn build`: Bundle TypeScript to single optimized `lib/index.js` using tsup (esbuild).
+- `npm run build:dev` / `yarn build:dev`: Compile TypeScript to separate files using `tsc` (for debugging).
 - `npm run test` / `yarn test`: Build and run custom test suite against compiled rules.
 - `npm run lint` / `yarn lint`: Lint all `.ts` files via ESLint.
 - `npm run format` / `yarn format`: Format code using Prettier.

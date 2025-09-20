@@ -7,7 +7,8 @@
     "lib"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsup",
+    "build:dev": "tsc",
     "lint": "eslint . --ext .ts",
     "test": "npm run build && node tests/index.js",
     "format": "prettier --write .",
@@ -22,6 +23,7 @@
     "@typescript-eslint/utils": "^5.62.0",
     "eslint": "^8.0.0",
     "prettier": "^3.6.2",
+    "tsup": "^8.5.0",
     "typescript": "~5.0.4"
   },
   "peerDependencies": {
