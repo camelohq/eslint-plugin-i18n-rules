@@ -57,6 +57,12 @@ ruleTester.run("no-hardcoded-jsx-text", rule, {
     // Numeric only in expression containers -> ignored
     { code: 'const C = () => <div>{"123"}</div>;' },
     { code: "const C = () => <div>{`999`}</div>;" },
+
+    // HTTP/HTTPS URLs -> ignored
+    { code: "const C = () => <div>https://example.com</div>;" },
+    { code: "const C = () => <div>http://localhost:3000</div>;" },
+    { code: 'const C = () => <div>{"https://api.example.com"}</div>;' },
+    { code: "const C = () => <div>{`http://localhost:8080/api`}</div>;" },
     // Trans component content should be ignored
     {
       code: 'const C = () => <Trans i18nKey="key">Hardcoded text inside Trans</Trans>;',

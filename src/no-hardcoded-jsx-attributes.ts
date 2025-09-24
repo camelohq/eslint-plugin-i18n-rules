@@ -139,6 +139,8 @@ export default createRule<Options, MessageIds>({
           if (!/[a-zA-Z0-9]/.test(text)) return;
           // Ignore numeric-only strings
           if (/^[0-9]+$/.test(text)) return;
+          // Ignore HTTP/HTTPS URLs
+          if (text.startsWith("http:") || text.startsWith("https:")) return;
           // Check if the string should be ignored based on configuration
           if (shouldIgnoreString(value.value)) return;
           context.report({
@@ -158,6 +160,8 @@ export default createRule<Options, MessageIds>({
             if (!/[a-zA-Z0-9]/.test(text)) return;
             // Ignore numeric-only strings
             if (/^[0-9]+$/.test(text)) return;
+            // Ignore HTTP/HTTPS URLs
+            if (text.startsWith("http:") || text.startsWith("https:")) return;
             // Check if the string should be ignored based on configuration
             if (shouldIgnoreString(expr.value)) return;
             context.report({
@@ -179,6 +183,8 @@ export default createRule<Options, MessageIds>({
             if (!/[a-zA-Z0-9]/.test(text)) return;
             // Ignore numeric-only strings
             if (/^[0-9]+$/.test(text)) return;
+            // Ignore HTTP/HTTPS URLs
+            if (text.startsWith("http:") || text.startsWith("https:")) return;
             // Check if the string should be ignored based on configuration
             if (shouldIgnoreString(cooked)) return;
             context.report({
