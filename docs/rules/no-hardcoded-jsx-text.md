@@ -74,7 +74,7 @@ const C = () => (
 
 ### Options
 
-- `ignoreLiterals` (string[], default: `["404", "N/A"]`) - Array of string literals to ignore. These strings will not trigger the rule when found in JSX text.
+- `ignoreLiterals` (string[], default: `["404", "N/A"]`) - Array of string literals to ignore. These strings will not trigger the rule when found in JSX text. **Custom values are merged with defaults**, so `"404"` and `"N/A"` are always ignored even when you provide custom values.
 - `caseSensitive` (boolean, default: `false`) - Whether to use case-sensitive matching when comparing against `ignoreLiterals`.
 - `trim` (boolean, default: `true`) - Whether to trim whitespace from strings before comparing against `ignoreLiterals`.
 
@@ -93,6 +93,8 @@ const UserProfile = () => <span>N/A</span>; // ignored by default
 
 ```tsx
 // With configuration: { "ignoreLiterals": ["SKU-123", "v1.0"] }
-const Product = () => <div>SKU-123</div>; // ignored
-const Version = () => <span>v1.0</span>; // ignored
+const Product = () => <div>SKU-123</div>; // ignored (custom)
+const Version = () => <span>v1.0</span>; // ignored (custom)
+const ErrorPage = () => <div>404</div>; // ignored (default, still preserved)
+const UserProfile = () => <span>N/A</span>; // ignored (default, still preserved)
 ```

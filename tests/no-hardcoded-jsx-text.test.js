@@ -118,6 +118,11 @@ console.log("Running no-hardcoded-jsx-text ignoreLiterals tests...");
 ruleTester.run("no-hardcoded-jsx-text with custom ignore list", rule, {
   valid: [
     {
+      // default ignoreLiterals: [404,N/A]
+      code: "const C = () => <div>N/A</div>;",
+      options: [{ ignoreLiterals: ["SKU-123", "v1.0"] }],
+    },
+    {
       code: "const C = () => <div>SKU-123</div>;",
       options: [{ ignoreLiterals: ["SKU-123", "v1.0"] }],
     },
