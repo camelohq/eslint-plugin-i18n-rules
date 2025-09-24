@@ -75,12 +75,21 @@ export default createRule<Options, MessageIds>({
   ],
   create(context) {
     const options = context.options[0] || {};
+    const defaultIgnoreLiterals = ["404", "N/A"];
+    const defaultIgnoreComponentsWithTitle = ["Layout", "SEO"];
     const {
-      ignoreLiterals = ["404", "N/A"],
+      ignoreLiterals: customIgnoreLiterals = [],
       caseSensitive = false,
       trim: shouldTrim = true,
-      ignoreComponentsWithTitle = ["Layout", "SEO"],
+      ignoreComponentsWithTitle: customIgnoreComponentsWithTitle = [],
     } = options;
+
+    // Merge default and custom ignore literals and components
+    const ignoreLiterals = [...defaultIgnoreLiterals, ...customIgnoreLiterals];
+    const ignoreComponentsWithTitle = [
+      ...defaultIgnoreComponentsWithTitle,
+      ...customIgnoreComponentsWithTitle,
+    ];
 
     const shouldIgnoreString = (text: string): boolean => {
       let normalizedText = text;

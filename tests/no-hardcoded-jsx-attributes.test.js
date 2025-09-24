@@ -111,6 +111,15 @@ ruleTester.run("no-hardcoded-jsx-attributes with custom ignore list", rule, {
       code: 'const C = () => <img alt={"v1.0"} />;',
       options: [{ ignoreLiterals: ["SKU-123", "v1.0"] }],
     },
+    // Default values should be preserved when custom ignoreLiterals are provided
+    {
+      code: 'const C = () => <div aria-label="N/A" />;',
+      options: [{ ignoreLiterals: ["SKU-123", "v1.0"] }],
+    },
+    {
+      code: 'const C = () => <img alt="404" />;',
+      options: [{ ignoreLiterals: ["SKU-123", "v1.0"] }],
+    },
   ],
   invalid: [
     {
@@ -184,6 +193,15 @@ ruleTester.run("no-hardcoded-jsx-attributes ignoreComponentsWithTitle", rule, {
     },
     {
       code: 'const C = () => <Container title={"Title"} />;',
+      options: [{ ignoreComponentsWithTitle: ["PageWrapper", "Container"] }],
+    },
+    // Default components (Layout, SEO) should be preserved when custom ignoreComponentsWithTitle are provided
+    {
+      code: 'const C = () => <Layout title="Page Title" />;',
+      options: [{ ignoreComponentsWithTitle: ["PageWrapper", "Container"] }],
+    },
+    {
+      code: 'const C = () => <SEO title="Page Title" />;',
       options: [{ ignoreComponentsWithTitle: ["PageWrapper", "Container"] }],
     },
   ],

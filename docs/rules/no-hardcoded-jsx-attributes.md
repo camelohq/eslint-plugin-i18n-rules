@@ -69,10 +69,10 @@ User-facing attribute text (e.g., `aria-label`, `title`, `alt`) must be localiza
 
 ### Options
 
-- `ignoreLiterals` (string[], default: `["404", "N/A"]`) - Array of string literals to ignore. These strings will not trigger the rule when found in JSX attributes.
+- `ignoreLiterals` (string[], default: `["404", "N/A"]`) - Array of string literals to ignore. These strings will not trigger the rule when found in JSX attributes. **Custom values are merged with defaults**, so `"404"` and `"N/A"` are always ignored even when you provide custom values.
 - `caseSensitive` (boolean, default: `false`) - Whether to use case-sensitive matching when comparing against `ignoreLiterals`.
 - `trim` (boolean, default: `true`) - Whether to trim whitespace from strings before comparing against `ignoreLiterals`.
-- `ignoreComponentsWithTitle` (string[], default: `["Layout", "SEO"]`) - Array of component names where hardcoded `title` props are allowed. Only applies to the `title` attribute specifically.
+- `ignoreComponentsWithTitle` (string[], default: `["Layout", "SEO"]`) - Array of component names where hardcoded `title` props are allowed. Only applies to the `title` attribute specifically. **Custom values are merged with defaults**, so `"Layout"` and `"SEO"` are always allowed even when you provide custom components.
 
 **Note:** Numeric-only strings (e.g., `"1"`, `"123"`, `"999"`) are automatically ignored regardless of configuration options.
 
@@ -89,8 +89,10 @@ const UserProfile = () => <img alt="N/A" />; // ignored by default
 
 ```tsx
 // With configuration: { "ignoreLiterals": ["SKU-123", "v1.0"] }
-const Product = () => <div title="SKU-123" />; // ignored
-const Version = () => <span aria-label="v1.0" />; // ignored
+const Product = () => <div title="SKU-123" />; // ignored (custom)
+const Version = () => <span aria-label="v1.0" />; // ignored (custom)
+const ErrorPage = () => <div aria-label="404" />; // ignored (default, still preserved)
+const UserProfile = () => <img alt="N/A" />; // ignored (default, still preserved)
 ```
 
 ### Examples with component title exceptions
@@ -120,7 +122,8 @@ const Meta = () => <SEO alt="Logo" />; // ❌ triggers rule
 
 ```tsx
 // With configuration: { "ignoreComponentsWithTitle": ["PageWrapper", "Container"] }
-const CustomPage = () => <PageWrapper title="Custom Page" />; // ✅ allowed
-const Section = () => <Container title="Section Title" />; // ✅ allowed
-const Other = () => <Layout title="Page" />; // ❌ triggers rule (Layout not in custom list)
+const CustomPage = () => <PageWrapper title="Custom Page" />; // ✅ allowed (custom)
+const Section = () => <Container title="Section Title" />; // ✅ allowed (custom)
+const HomePage = () => <Layout title="Welcome" />; // ✅ allowed (default, still preserved)
+const BlogPost = () => <SEO title="Post Title" />; // ✅ allowed (default, still preserved)
 ```
