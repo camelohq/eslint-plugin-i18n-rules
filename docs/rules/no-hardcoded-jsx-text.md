@@ -34,7 +34,11 @@ const C = () => <span>{"999"}</span>; // numeric only
 const C = () => <style>{".foo{color:red}"}</style>; // ignored tag
 // Trans component content is ignored
 const C = () => <Trans i18nKey="welcome">Welcome to our app</Trans>;
-const C = () => <Trans>Your request to join <span>company</span> has been approved</Trans>;
+const C = () => (
+  <Trans>
+    Your request to join <span>company</span> has been approved
+  </Trans>
+);
 ```
 
 ## Configuration

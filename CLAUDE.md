@@ -84,6 +84,7 @@ Rules are implemented using `@typescript-eslint/utils.RuleCreator` and follow th
 ### Available Rules
 
 #### `no-hardcoded-jsx-text` (Recommended - Error)
+
 - **Status**: Enabled as "error" in recommended config
 - **Targets**: JSX text nodes and expression containers
 - **Ignores**: Whitespace-only content, punctuation, non-alphanumeric strings, numeric-only strings
@@ -93,6 +94,7 @@ Rules are implemented using `@typescript-eslint/utils.RuleCreator` and follow th
 - **Configuration**: `ignoreLiterals`, `caseSensitive`, `trim` options
 
 #### `no-hardcoded-jsx-attributes` (Recommended - Warning)
+
 - **Status**: Enabled as "warn" in recommended config with default options
 - **Targets**: Explicit allowlist of user-visible attributes:
   - Accessibility: `aria-label`, `aria-description`, `aria-valuetext`, `aria-roledescription`
@@ -139,6 +141,7 @@ configs: {
 ### Usage Patterns
 
 **Recommended config usage:**
+
 ```json
 {
   "extends": ["plugin:i18n-rules/recommended"]
@@ -146,6 +149,7 @@ configs: {
 ```
 
 **Manual configuration:**
+
 ```json
 {
   "plugins": ["i18n-rules"],

@@ -52,6 +52,14 @@ ruleTester.run("no-hardcoded-jsx-attributes", rule, {
     { code: 'const C = () => <div title={"404"} />;' },
     { code: "const C = () => <span aria-label={`N/A`} />;" },
 
+    // HTTP/HTTPS URLs -> ignored
+    { code: 'const C = () => <a title="https://example.com" />;' },
+    { code: 'const C = () => <img alt="http://localhost:3000" />;' },
+    { code: 'const C = () => <div aria-label={"https://api.example.com"} />;' },
+    {
+      code: "const C = () => <input placeholder={`http://localhost:8080/api`} />;",
+    },
+
     // aria-hidden is not in TARGET_ATTRS allowlist anymore
     { code: 'const C = () => <span aria-hidden="true" />;' },
     { code: 'const C = () => <span aria-hidden="false" />;' },
