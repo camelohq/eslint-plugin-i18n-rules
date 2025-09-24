@@ -182,4 +182,162 @@ ruleTester.run("no-hardcoded-jsx-text trim option", rule, {
   ],
 });
 
+// =============================================================================
+// Enhanced Detection Rules Tests
+// =============================================================================
+console.log("Running no-hardcoded-jsx-text enhanced detection tests...");
+
+// Test conditional text detection
+ruleTester.run("no-hardcoded-jsx-text conditional text detection", rule, {
+  valid: [
+    // Conditional expressions with t() usage
+    { code: 'const C = () => <div>{isError ? t("error.message") : t("success.message")}</div>;' },
+    { code: 'const C = () => <div>{loading ? null : t("content.loaded")}</div>;' },
+    // Non-text conditionals
+    { code: 'const C = () => <div>{count > 0 ? count : 0}</div>;' },
+    // Ignored literals in conditionals
+    { code: 'const C = () => <div>{showNA ? "N/A" : "404"}</div>;' },
+  ],
+  invalid: [
+    {
+      code: 'const C = () => <div>{isError ? "Something went wrong" : "Success"}</div>;',
+      errors: [
+        { messageId: "noHardcodedConditional" },
+        { messageId: "noHardcodedConditional" },
+      ],
+    },
+    {
+      code: 'const C = () => <div>{loading ? "Loading..." : data}</div>;',
+      errors: [{ messageId: "noHardcodedConditional" }],
+    },
+    {
+      code: 'const C = () => <div>{status === "error" ? `Error occurred` : "All good"}</div>;',
+      errors: [
+        { messageId: "noHardcodedConditional" },
+        { messageId: "noHardcodedConditional" },
+      ],
+    },
+  ],
+});
+
+// Test partially hardcoded template literals (explicitly enabled)
+ruleTester.run("no-hardcoded-jsx-text partially hardcoded templates", rule, {
+  valid: [
+    // Pure dynamic templates (no hardcoded parts)
+    {
+      code: 'const C = () => <div>{`${greeting} ${name}`}</div>;',
+      options: [{ detections: { partiallyHardcodedTemplates: true } }],
+    },
+    {
+      code: 'const C = () => <div>{`${count}`}</div>;',
+      options: [{ detections: { partiallyHardcodedTemplates: true } }],
+    },
+    // Templates with only punctuation between variables
+    {
+      code: 'const C = () => <div>{`${value1}${value2}`}</div>;',
+      options: [{ detections: { partiallyHardcodedTemplates: true } }],
+    },
+    // Using t() for templates
+    {
+      code: 'const C = () => <div>{t("greeting", { name })}</div>;',
+      options: [{ detections: { partiallyHardcodedTemplates: true } }],
+    },
+  ],
+  invalid: [
+    {
+      code: 'const C = () => <div>{`Hello ${name}!`}</div>;',
+      options: [{ detections: { partiallyHardcodedTemplates: true } }],
+      errors: [{ messageId: "partiallyHardcodedTemplate" }],
+    },
+    {
+      code: 'const C = () => <div>{`Welcome to ${siteName} - enjoy your stay`}</div>;',
+      options: [{ detections: { partiallyHardcodedTemplates: true } }],
+      errors: [{ messageId: "partiallyHardcodedTemplate" }],
+    },
+    {
+      code: 'const C = () => <div>{`Error: ${message}`}</div>;',
+      options: [{ detections: { partiallyHardcodedTemplates: true } }],
+      errors: [{ messageId: "partiallyHardcodedTemplate" }],
+    },
+    {
+      code: 'const C = () => <div>{`User ${user.name} has ${count} items`}</div>;',
+      options: [{ detections: { partiallyHardcodedTemplates: true } }],
+      errors: [{ messageId: "partiallyHardcodedTemplate" }],
+    },
+  ],
+});
+
+// Test detection configuration options
+ruleTester.run("no-hardcoded-jsx-text detection configuration", rule, {
+  valid: [
+    // Disable conditional text detection
+    {
+      code: 'const C = () => <div>{isError ? "Error" : "Success"}</div>;',
+      options: [{ detections: { conditionalText: false } }],
+    },
+    // Disable partially hardcoded templates
+    {
+      code: 'const C = () => <div>{`Hello ${name}!`}</div>;',
+      options: [{ detections: { partiallyHardcodedTemplates: false } }],
+    },
+    // Disable template literals entirely
+    {
+      code: 'const C = () => <div>{`Static text`}</div>;',
+      options: [{ detections: { templateLiterals: false } }],
+    },
+    // Disable JSX text detection
+    {
+      code: 'const C = () => <div>Hardcoded text</div>;',
+      options: [{ detections: { jsxText: false } }],
+    },
+    // Disable expression containers
+    {
+      code: 'const C = () => <div>{"Static string"}</div>;',
+      options: [{ detections: { expressionContainers: false } }],
+    },
+  ],
+  invalid: [
+    // These should still trigger with default settings (conditionalText enabled by default)
+    {
+      code: 'const C = () => <div>{isError ? "Error" : "Success"}</div>;',
+      errors: [{ messageId: "noHardcodedConditional" }, { messageId: "noHardcodedConditional" }],
+    },
+    // This should trigger when partially hardcoded templates are explicitly enabled
+    {
+      code: 'const C = () => <div>{`Hello ${name}!`}</div>;',
+      options: [{ detections: { partiallyHardcodedTemplates: true } }],
+      errors: [{ messageId: "partiallyHardcodedTemplate" }],
+    },
+  ],
+});
+
+// Test mixed detection scenarios
+ruleTester.run("no-hardcoded-jsx-text mixed scenarios", rule, {
+  valid: [
+    // Complex valid patterns
+    { code: 'const C = () => <div>{data ? t("data.loaded", data) : t("data.empty")}</div>;' },
+    { code: 'const C = () => <div>{t("greeting", { name: user?.name || t("common.anonymous") })}</div>;' },
+  ],
+  invalid: [
+    // Complex invalid patterns (with enhanced detection enabled)
+    {
+      code: 'const C = () => <div>{user ? `Welcome ${user.name}` : "Please log in"}</div>;',
+      options: [{ detections: { partiallyHardcodedTemplates: true } }],
+      errors: [
+        { messageId: "noHardcodedConditional" },
+        { messageId: "partiallyHardcodedTemplate" },
+      ],
+    },
+    {
+      code: 'const C = () => <div>{loading ? "Loading data..." : `Found ${count} results`}</div>;',
+      options: [{ detections: { partiallyHardcodedTemplates: true } }],
+      errors: [
+        { messageId: "noHardcodedConditional" },
+        { messageId: "partiallyHardcodedTemplate" },
+      ],
+    },
+  ],
+});
+
+console.log("✓ no-hardcoded-jsx-text enhanced detection tests completed successfully.");
 console.log("✓ no-hardcoded-jsx-text tests completed successfully.");
